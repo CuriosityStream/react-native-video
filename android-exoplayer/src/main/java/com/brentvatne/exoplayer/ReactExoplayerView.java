@@ -667,12 +667,8 @@ class ReactExoplayerView extends FrameLayout implements
      * else creates a simple DataSource factory
      */
     private void setMediaDataSourceFactory() {
-        if (cache) {
-            mediaDataSourceFactory = new CacheDataSourceFactory(this.themedReactContext,
-                    maxCacheSize, maxCacheFileSize, bandwidthMeter, this.requestHeaders);
-        } else {
-            mediaDataSourceFactory = buildDataSourceFactory(true);
-        }
+        mediaDataSourceFactory = new CacheDataSourceFactory(this.themedReactContext,
+                100, 10, bandwidthMeter, this.requestHeaders);
     }
 
     /**
