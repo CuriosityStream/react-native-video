@@ -945,7 +945,7 @@ Note: On Android ExoPlayer, you must set the [reportBandwidth](#reportbandwidth)
 Platforms: Android ExoPlayer
 
 #### onStreamBandwidthUpdate
-Callback function that is called when the bandwidth rqeuired for the current stream changes.
+Callback function that is called when the bandwidth required for the current stream changes.
 
 Payload:
 
