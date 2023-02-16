@@ -146,11 +146,6 @@ static int const RCTVideoUnset = -1;
                                              selector:@selector(audioRouteChanged:)
                                                  name:AVAudioSessionRouteChangeNotification
                                                object:nil];
-                                               
-	[[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(bandwidthUpdated:)
-                                                 name:AVPlayerItemNewAccessLogEntryNotification
-                                               object:nil];
   }
   
   return self;
@@ -208,8 +203,8 @@ static int const RCTVideoUnset = -1;
         double bitsTransferred = lastEvent.numberOfBytesTransferred * 8;
         bitrate = bitsTransferred / lastEvent.segmentsDownloadedDuration;
     }
-    
-    if (isinf(bitrate) || isnan(bitrate)){return;}
+        
+    if (isinf(bitrate) || isnan(bitrate) || (bitrate <= 1)){return;}
         
     if (self.onVideoStreamBandwidthUpdate)
         self.onVideoStreamBandwidthUpdate(@{@"bitrate": [NSNumber numberWithDouble:bitrate]});
@@ -829,7 +824,7 @@ static int const RCTVideoUnset = -1;
                                                   name:AVPlayerItemNewAccessLogEntryNotification
                                                 object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(handleAVPlayerAccess:)
+                                           selector:@selector(bandwidthUpdated:)
                                                name:AVPlayerItemNewAccessLogEntryNotification
                                              object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -842,16 +837,6 @@ static int const RCTVideoUnset = -1;
   
 }
 
-- (void)handleAVPlayerAccess:(NSNotification *)notification {
-  AVPlayerItemAccessLog *accessLog = [((AVPlayerItem *)notification.object) accessLog];
-  AVPlayerItemAccessLogEvent *lastEvent = accessLog.events.lastObject;
-  
-  /* TODO: get this working
-   if (self.onBandwidthUpdate) {
-   self.onBandwidthUpdate(@{@"bitrate": [NSNumber numberWithFloat:lastEvent.observedBitrate]});
-   }
-   */
-}
 
 - (void)didFailToFinishPlaying:(NSNotification *)notification {
   NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
