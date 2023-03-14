@@ -120,6 +120,7 @@ static int const RCTVideoUnset = -1;
     _pictureInPicture = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
     _mixWithOthers = @"inherit"; // inherit, mix, duck
+
 #if TARGET_OS_IOS
     _restoreUserInterfaceForPIPStopCompletionHandler = NULL;
 #endif
@@ -186,6 +187,28 @@ static int const RCTVideoUnset = -1;
   }
   
   return (kCMTimeRangeZero);
+}
+
+-(void)bandwidthUpdated:(NSNotification *)notification
+{
+    AVPlayerItemAccessLog *accessLog = [((AVPlayerItem *)notification.object) accessLog];
+    if (!accessLog){return;}
+    AVPlayerItemAccessLogEvent *lastEvent = accessLog.events.lastObject;
+    if (!lastEvent){return;}
+    double bitrate = lastEvent.indicatedBitrate;
+    if (bitrate == -1) {
+        // NOTE: The indicated bitrate will only be -1 if it's not provided in the HLS manifest.
+        if (!lastEvent.segmentsDownloadedDuration){return;}
+        if (lastEvent.segmentsDownloadedDuration <= 0){return;}
+        double bitsTransferred = lastEvent.numberOfBytesTransferred * 8;
+        bitrate = bitsTransferred / lastEvent.segmentsDownloadedDuration;
+    }
+        
+    if (isinf(bitrate) || isnan(bitrate) || (bitrate <= 1)){return;}
+        
+    if (self.onVideoStreamBandwidthUpdate)
+        self.onVideoStreamBandwidthUpdate(@{@"bitrate": [NSNumber numberWithDouble:bitrate]});
+
 }
 
 -(void)addPlayerTimeObserver
@@ -398,6 +421,9 @@ static int const RCTVideoUnset = -1;
       }
       
       self->_player = [AVPlayer playerWithPlayerItem:self->_playerItem];
+      NSNotification *notification = [[NSNotification alloc] initWithName:@"XCD_PLAYER_AVAILABLE" object:self->_player userInfo:nil];
+      [[NSNotificationCenter defaultCenter] postNotification:notification];
+
       self->_player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
       
       [self->_player addObserver:self forKeyPath:playbackRate options:0 context:nil];
@@ -798,7 +824,7 @@ static int const RCTVideoUnset = -1;
                                                   name:AVPlayerItemNewAccessLogEntryNotification
                                                 object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(handleAVPlayerAccess:)
+                                           selector:@selector(bandwidthUpdated:)
                                                name:AVPlayerItemNewAccessLogEntryNotification
                                              object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -811,16 +837,6 @@ static int const RCTVideoUnset = -1;
   
 }
 
-- (void)handleAVPlayerAccess:(NSNotification *)notification {
-  AVPlayerItemAccessLog *accessLog = [((AVPlayerItem *)notification.object) accessLog];
-  AVPlayerItemAccessLogEvent *lastEvent = accessLog.events.lastObject;
-  
-  /* TODO: get this working
-   if (self.onBandwidthUpdate) {
-   self.onBandwidthUpdate(@{@"bitrate": [NSNumber numberWithFloat:lastEvent.observedBitrate]});
-   }
-   */
-}
 
 - (void)didFailToFinishPlaying:(NSNotification *)notification {
   NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
@@ -1639,6 +1655,7 @@ static int const RCTVideoUnset = -1;
     [_player removeObserver:self forKeyPath:externalPlaybackActive context:nil];
     _isExternalPlaybackActiveObserverRegistered = NO;
   }
+  [_player replaceCurrentItemWithPlayerItem:nil];
   _player = nil;
   
   [self removePlayerLayer];

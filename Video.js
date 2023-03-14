@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, requireNativeComponent, NativeModules, View, ViewPropTypes, Image, Platform, findNodeHandle } from 'react-native';
+import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
+import { ViewPropTypes, ImagePropTypes } from 'deprecated-react-native-prop-types';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import TextTrackType from './TextTrackType';
 import FilterType from './FilterType';
@@ -280,7 +281,7 @@ export default class Video extends Component {
       console.warn('Trying to load empty source.');
     }
 
-    const isNetwork = !!(uri && uri.match(/^https?:/));
+    const isNetwork = !!(uri && (uri.match(/^https?:/) || uri.match(/^hls-service?:/) || uri.match(/^clrifex?:/)));
     const isAsset = !!(uri && uri.match(/^(assets-library|ipod-library|file|content|ms-appx|ms-appdata):/));
 
     let nativeResizeMode;
@@ -423,7 +424,7 @@ Video.propTypes = {
   maxBitRate: PropTypes.number,
   resizeMode: PropTypes.string,
   poster: PropTypes.string,
-  posterResizeMode: Image.propTypes.resizeMode,
+  posterResizeMode: ImagePropTypes.resizeMode,
   repeat: PropTypes.bool,
   automaticallyWaitsToMinimizeStalling: PropTypes.bool,
   allowsExternalPlayback: PropTypes.bool,
