@@ -5,6 +5,7 @@
 #import <React/UIView+React.h>
 #include <MediaAccessibility/MediaAccessibility.h>
 #include <AVFoundation/AVFoundation.h>
+#import "PlaybackBitrateEmitter.h"
 
 static NSString *const statusKeyPath = @"status";
 static NSString *const playbackLikelyToKeepUpKeyPath = @"playbackLikelyToKeepUp";
@@ -206,8 +207,7 @@ static int const RCTVideoUnset = -1;
         
     if (isinf(bitrate) || isnan(bitrate) || (bitrate <= 1)){return;}
         
-    if (self.onVideoStreamBandwidthUpdate)
-        self.onVideoStreamBandwidthUpdate(@{@"bitrate": [NSNumber numberWithDouble:bitrate]});
+    [playbackBitrateEmitter emitBitrateEvent:bitrate];
 
 }
 
