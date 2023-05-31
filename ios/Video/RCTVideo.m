@@ -146,6 +146,11 @@ static int const RCTVideoUnset = -1;
                                              selector:@selector(audioRouteChanged:)
                                                  name:AVAudioSessionRouteChangeNotification
                                                object:nil];
+      
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(bandwidthUpdated:)
+                                                 name:AVPlayerItemNewAccessLogEntryNotification
+                                               object:nil];
   }
   
   return self;
@@ -820,13 +825,6 @@ static int const RCTVideoUnset = -1;
                                                name:AVPlayerItemPlaybackStalledNotification
                                              object:nil];
   
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:AVPlayerItemNewAccessLogEntryNotification
-                                                object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(bandwidthUpdated:)
-                                               name:AVPlayerItemNewAccessLogEntryNotification
-                                             object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self
                                                   name: AVPlayerItemFailedToPlayToEndTimeNotification
                                                 object:nil];
