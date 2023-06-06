@@ -315,7 +315,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
                     self.applyModifiers()
                     self._player?.actionAtItemEnd = .none
 
-                    if #available(iOS 10.0, *) {
+                    if #available(iOS 10.0, tvOS 10.0, *) {
                         self.setAutomaticallyWaitsToMinimizeStalling(self._automaticallyWaitsToMinimizeStalling)
                     }
 
@@ -452,7 +452,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
                 _imaAdsManager.getAdsManager()?.resume()
 #endif
             } else {
-                if #available(iOS 10.0, *), !_automaticallyWaitsToMinimizeStalling {
+                if #available(iOS 10.0, tvOS 10.0, *), !_automaticallyWaitsToMinimizeStalling {
                     _player?.playImmediately(atRate: _rate)
                 } else {
                     _player?.play()
@@ -530,7 +530,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
     @objc
     func setPreferredForwardBufferDuration(_ preferredForwardBufferDuration:Float) {
         _preferredForwardBufferDuration = preferredForwardBufferDuration
-        if #available(iOS 10.0, *) {
+        if #available(iOS 10.0, tvOS 10.0, *) {
             _playerItem?.preferredForwardBufferDuration = TimeInterval(preferredForwardBufferDuration)
         } else {
             // Fallback on earlier versions
@@ -540,7 +540,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
     @objc
     func setAutomaticallyWaitsToMinimizeStalling(_ waits:Bool) {
         _automaticallyWaitsToMinimizeStalling = waits
-        if #available(iOS 10.0, *) {
+        if #available(iOS 10.0, tvOS 10.0 *) {
             _player?.automaticallyWaitsToMinimizeStalling = waits
         } else {
             // Fallback on earlier versions
@@ -571,7 +571,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
             _player?.isMuted = false
         }
 
-        if #available(iOS 12.0, *) {
+        if #available(iOS 12.0, tvOS 12.0 *) {
             _player?.preventsDisplaySleepDuringVideoPlayback = _preventsDisplaySleepDuringVideoPlayback
         } else {
             // Fallback on earlier versions
@@ -816,7 +816,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
         }
 
         let filter:CIFilter! = CIFilter(name: filterName)
-        if #available(iOS 9.0, *), let _playerItem = _playerItem {
+        if #available(iOS 9.0, tvOS 9.0, *), let _playerItem = _playerItem {
             self._playerItem?.videoComposition = AVVideoComposition(
                 asset: _playerItem.asset,
                 applyingCIFiltersWithHandler: { (request:AVAsynchronousCIImageFilteringRequest) in
