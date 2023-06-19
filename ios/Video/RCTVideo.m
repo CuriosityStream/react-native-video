@@ -426,7 +426,8 @@ static int const RCTVideoUnset = -1;
       }
       
       self->_player = [AVPlayer playerWithPlayerItem:self->_playerItem];
-      NSNotification *notification = [[NSNotification alloc] initWithName:@"XCD_PLAYER_AVAILABLE" object:self->_player userInfo:nil];
+      NSDictionary *userInfo = @{@"player":self->_player, @"playerView":self};
+      NSNotification *notification = [[NSNotification alloc] initWithName:@"XCD_PLAYER_AVAILABLE" object:self userInfo:userInfo];
       [[NSNotificationCenter defaultCenter] postNotification:notification];
 
       self->_player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
