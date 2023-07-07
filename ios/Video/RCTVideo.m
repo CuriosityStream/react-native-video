@@ -1149,9 +1149,12 @@ static int const RCTVideoUnset = -1;
       if ([type isEqualToString:@"language"]) {
         optionValue = [currentOption extendedLanguageTag];
       } else {
-        optionValue = [[[currentOption commonMetadata]
+         // Added check for array size to avoid index out-of-bounds exception which is caused when subtitle is enabled and subtitle is not available for the media file.
+         if(currentOption.commonMetadata.count > 0){
+             optionValue = [[[currentOption commonMetadata]
                         valueForKey:@"value"]
                        objectAtIndex:0];
+             }
       }
       if ([value isEqualToString:optionValue]) {
         mediaOption = currentOption;
