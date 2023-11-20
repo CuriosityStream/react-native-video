@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
+import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle, NativeEventEmitter } from 'react-native';
 import { ViewPropTypes, ImagePropTypes } from 'deprecated-react-native-prop-types';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import TextTrackType from './TextTrackType';
 import FilterType from './FilterType';
 import DRMType from './DRMType';
 import VideoResizeMode from './VideoResizeMode.js';
+import NowPlayingType from './NowPlayingType.js';
 
 const styles = StyleSheet.create({
   base: {
@@ -14,7 +15,33 @@ const styles = StyleSheet.create({
   },
 });
 
-export { TextTrackType, FilterType, DRMType };
+export { TextTrackType, FilterType, DRMType, NowPlayingType};
+
+export const NowPlayingManager = {
+  setNowPlaying: (info) => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.setNowPlaying(info);
+    }
+   },
+ 
+   setPlayback: (info) => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.updatePlayback(info);
+    }
+   },
+ 
+   resetNowPlaying: () => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.resetNowPlaying();
+    }
+   },
+ 
+   updatePlayback: (info) => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.updatePlayback(info);
+    }
+   },
+}
 
 export default class Video extends Component {
 
@@ -384,6 +411,7 @@ Video.propTypes = {
     PropTypes.number,
     PropTypes.object,
   ]),
+  //change props
   fullscreen: PropTypes.bool,
   onVideoLoadStart: PropTypes.func,
   onVideoLoad: PropTypes.func,
