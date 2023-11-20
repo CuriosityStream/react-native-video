@@ -233,7 +233,6 @@ RCT_EXPORT_METHOD(stopControl){
             }
         }
     }
-    NSLog(@"%@", [mediaDict description]);
 
     return mediaDict;
 }
