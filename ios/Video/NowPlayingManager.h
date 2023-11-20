@@ -12,9 +12,8 @@
 #endif /* NowPlayingManager_h */
 
 #import <React/RCTBridgeModule.h>
-#import <React/RCTEventEmitter.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface NowPlayingManager : RCTEventEmitter <RCTBridgeModule>
+@interface NowPlayingManager : NSObject <RCTBridgeModule>
 
 @end
