@@ -7,6 +7,7 @@ import TextTrackType from './TextTrackType';
 import FilterType from './FilterType';
 import DRMType from './DRMType';
 import VideoResizeMode from './VideoResizeMode.js';
+import NowPlayingType from './NowPlayingType.js';
 
 const styles = StyleSheet.create({
   base: {
@@ -14,7 +15,27 @@ const styles = StyleSheet.create({
   },
 });
 
-export { TextTrackType, FilterType, DRMType };
+export { TextTrackType, FilterType, DRMType, NowPlayingType};
+
+export const NowPlayingManager = {
+  setNowPlaying: (info) => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.setNowPlaying(info);
+    }
+   },
+   
+   resetNowPlaying: () => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.resetNowPlaying();
+    }
+   },
+ 
+   updatePlayback: (info) => {
+    if(Platform.OS === 'ios') {
+      NativeModules.NowPlayingManager.updatePlayback(info);
+    }
+   },
+}
 
 export default class Video extends Component {
 
