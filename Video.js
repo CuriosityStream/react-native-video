@@ -23,13 +23,7 @@ export const NowPlayingManager = {
       NativeModules.NowPlayingManager.setNowPlaying(info);
     }
    },
- 
-   setPlayback: (info) => {
-    if(Platform.OS === 'ios') {
-      NativeModules.NowPlayingManager.updatePlayback(info);
-    }
-   },
- 
+   
    resetNowPlaying: () => {
     if(Platform.OS === 'ios') {
       NativeModules.NowPlayingManager.resetNowPlaying();
