@@ -411,7 +411,6 @@ Video.propTypes = {
     PropTypes.number,
     PropTypes.object,
   ]),
-  //change props
   fullscreen: PropTypes.bool,
   onVideoLoadStart: PropTypes.func,
   onVideoLoad: PropTypes.func,
