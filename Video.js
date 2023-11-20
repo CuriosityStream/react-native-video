@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle, NativeEventEmitter } from 'react-native';
+import { StyleSheet, requireNativeComponent, NativeModules, View, Image, Platform, findNodeHandle } from 'react-native';
 import { ViewPropTypes, ImagePropTypes } from 'deprecated-react-native-prop-types';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import TextTrackType from './TextTrackType';
